@@ -52,6 +52,25 @@ const fetchDataByApiUrl = async (apiUrl) => {
         throw error;
     }
 };
+
+// Post api data by url in config
+const postDataByApiUrl = async (apiUrl, data) => {
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        const responseData = await response.json();
+        return responseData;
+    } catch (error) {
+        consoleError('Error posting or processing API data:', error);
+        throw error;
+    }
+};
+
 const fetchSalesData = async () => {
     return await fetchDataByApiUrl(config.salesApiUrl);
 };
@@ -538,6 +557,18 @@ module.exports = {
             return await fetchDataByApiUrl(userUrl);
         } catch (error) {
             consoleError('Error fetching or processing userUrl data:', error);
+            throw error;
+        }
+    },
+    postUsernameData: async (nanswapusername) => {
+        try {
+            return await postDataByApiUrl(config.usernameApiUrl, {
+                discordUserId: client.user.id,
+                discordUsername: client.user.username,
+                nanswapUsername: nanswapusername
+            });
+        } catch (error) {
+            consoleError('Error posting usernameApiData data:', error);
             throw error;
         }
     },
